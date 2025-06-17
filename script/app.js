@@ -3,25 +3,21 @@ const CONTENT_ARTICLE_TEASERS = [
   "This is an article about first party that happened this weekend",
   "This is an article about second party that happened this weekend",
   "This is an article about third party that happened this weekend" ];
-
 const acceptCookies = () => {
   document.body.classList.remove('no-scroll');
   document.querySelector('.cookieLayer__base').classList.add('cookieLayer__base--accepted');
 };
-
 const dynamicContent = () => {
   const teasers = document.querySelectorAll('.teaser__text');
   const marqueeBar = document.querySelector('marquee');
-
   // mock content delay
-  setTimeout(() => marqueeBar.innerHTML = CONTENT_BREAKING_NEWS, 3000);
-
+  // setTimeout(() => marqueeBar.innerHTML = CONTENT_BREAKING_NEWS, 3000);
+  marqueeBar.innerHTML = CONTENT_BREAKING_NEWS
   // create dynamic content
   teasers.forEach((teaser, index) => {
     teaser.innerHTML = CONTENT_ARTICLE_TEASERS[index];
   });
 };
-
 const cookieLayerInit = () => {
   Vue.component('CookieLayer', {
     template: `<div class="cookieLayer__content">
@@ -41,10 +37,9 @@ const cookieLayerInit = () => {
         }
       },
   });
-
   const vueApp = new Vue({
     el: '#cookie-vue',
-    data: { 
+    data: {
       displayCookieBox: true,
     },
     methods: {
@@ -58,28 +53,76 @@ const cookieLayerInit = () => {
     }
   });
 };
-
-const layoutTrashing = (n) => {
-  for (let i = 0; i < n; i++) {
-    const container = document.querySelector('header');
-    console.log(container.clientTop);
-  }
-};
-
-const JSblocking = () => {
-  let n = 1000000;
-  while (n) { n--;}
-}
-
+// const layoutTrashing = (n) => {
+//   for (let i = 0; i < n; i++) {
+//     const container = document.querySelector('header');
+//     console.log(container.clientTop);
+//   }
+// };
+// const JSblocking = () => {
+//   let n = 1000000;
+//   while (n) { n--;}
+// }
 const initApp = () => {
   const lazyLoadInstance = new LazyLoad();
-  
-  layoutTrashing(20);
+  // layoutTrashing(20);
   dynamicContent();
-  setTimeout(() => console.log('Hello World!'), 3000);
-  JSblocking();
+  // setTimeout(() => console.log('Hello World!'), 3000);
+  // JSblocking();
   cookieLayerInit();
   lazyLoadInstance.update();
 };
-
 initApp();
+    ;(function(win, doc, style, timeout) {
+      var STYLE_ID = 'at-body-style';
+      function getParent() {
+        return doc.getElementsByTagName('head')[0];
+      }
+      function addStyle(parent, id, def) {
+        if (!parent) {
+          return;
+        }
+        var style = doc.createElement('style');
+        style.id = id;
+        style.innerHTML = def;
+        parent.appendChild(style);
+      }
+      function removeStyle(parent, id) {
+        if (!parent) {
+          return;
+        }
+        var style = doc.getElementById(id);
+        if (!style) {
+          return;
+        }
+        parent.removeChild(style);
+      }
+      addStyle(getParent(), STYLE_ID, style);
+      setTimeout(function() {
+        removeStyle(getParent(), STYLE_ID);
+      }, timeout);
+    }(window, document, "body {opacity: 0 !important}", 0));
+    // advertisment mock
+    const initAd = () => {
+      const adSpace = document.querySelector('.main__advertising');
+      const gif = '<div style="width:400px;max-width:100%;"><div style="height:0;padding-bottom:52.4%;position:relative;"><iframe width="500" height="262" style="position:absolute;top:0;left:0;width:100%;height:100%;" frameBorder="0" src="https://imgflip.com/embed/6wy03z"></iframe></div></div>';
+      // setTimeout(() => adSpace.innerHTML = gif, 3000);
+      adSpace.innerHTML = gif;
+    };
+    // Slow JS
+    function wait(ms) {
+      var start = Date.now(),
+      now = start;
+      while (now - start < ms) {
+        now = Date.now();
+      }
+    };
+    // async CSS
+    function loadMobileCSS() {
+      $('head').append(`<link rel="stylesheet" type="text/css" href="styles/mobile.css">`);
+    };
+    // wait(2000);
+    window.addEventListener('load', () => {
+      initAd();
+      loadMobileCSS();
+    });
